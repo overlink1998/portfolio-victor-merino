@@ -24,6 +24,10 @@ Soy una persona analítica y proactiva, con experiencia en desarrollo de softwar
   - Diseño y desarrollo de software para automatización de tareas.
   - Análisis predictivo de mercado y ventas.
   - Manejo de inventarios e informes empresariales.
+  desarrollador de softeare empresariales como freelancer
+  - Diseño y desarrollo de software contables.
+  - Análisis estadisticos en power Bi y tableu anexado a sistemas en la nube.
+
 
 ## 🌟 Proyectos
 1. **Software de Gestión Empresarial**:  
