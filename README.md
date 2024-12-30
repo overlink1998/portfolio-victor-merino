@@ -1,2 +1,0 @@
-# portfolio-victor-merino
-PROYECTOS, ESTUDIOS Y SOFTWARE DE CREACIÓN PROPIA
