@@ -6,6 +6,7 @@ body {
     background-color: #f4f4f9;
     color: #333;
     line-height: 1.6;
+    text-align: justify;
 }
 
 /* Encabezado */
@@ -79,6 +80,11 @@ ul li {
     margin-bottom: 10px;
 }
 
+/* Párrafos */
+p {
+    text-align: justify;
+}
+
 /* Pie de página */
 footer {
     background-color: #333;
@@ -96,4 +102,3 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-
