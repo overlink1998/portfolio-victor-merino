@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUARTO PODER - Artículo</title>
+    <link rel="stylesheet" href="estilofachero.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <h1>CUARTO PODER NOTICIAS</h1>
+            <div class="date-time" id="date-time"></div>
+            <nav class="nav-links-right">
+                <ul>
+                    <li><a href="/admin.html">ADMIN</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="bottom-header">
+            <nav>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/index2.html?section=Cienaga">Ciénaga</a></li>
+                    <li><a href="/index2.html?section=SantaMartaYMagdalena">Santa Marta Y Magdalena</a></li>
+                    <li><a href="/index2.html?section=Mundo">Mundo</a></li>
+                    <li><a href="/index2.html?section=Opinion">Opinión</a></li>
+                    <li><a href="/index2.html?section=Educacion">Educación</a></li>
+                    <li><a href="/index2.html?section=Sociedad">Sociedad</a></li>
+                    <li><a href="/index2.html?section=Deporte">Deporte</a></li>
+                </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="content-wrapper">
+        <main id="main-content">
+            <article>
+                <div id="article-images"></div>
+                <h2 id="article-title"></h2>
+                <p id="article-date"></p>
+                <p id="article-content"></p>
+                <div id="additional-content"></div>
+                <div id="article-video"></div>
+            </article>
+        </main>
+        <aside class="additional-content" id="additionalContent">
+            <h2>Contenido Adicional</h2>
+            <p id="additionalContentText"></p>
+            <img id="additionalContentImage" class="article-image" style="display: none;">
+            <h2>Redes Sociales</h2>
+            <p id="socialMediaContent1"></p>
+            <img id="socialMediaImage1" class="article-image" style="display: none;">
+            <p id="socialMediaContent2"></p>
+            <img id="socialMediaImage2" class="article-image" style="display: none;">
+        </aside>
+    </div>
+    <footer>
+        <p>&copy; 2024 CUARTO PODER</p>
+        <p class="copyright">© Todos los derechos reservados a Cuarto Poder Noticias</p>
+    </footer>
+    <script>
+        async function loadArticle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const section = urlParams.get('section');
+            const title = urlParams.get('title');
+            const response = await fetch(`app.php?action=getArticles&section=${section}`);
+            const articles = await response.json();
+            const article = articles.find(article => article.title === title);
+
+            if (article) {
+                document.getElementById('article-title').textContent = article.title;
+                document.getElementById('article-content').textContent = article.content;
+                const formattedDate = article.date;
+                document.getElementById('article-date').textContent = formattedDate;
+
+                const articleImages = document.getElementById('article-images');
+                if (article.image) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = article.image;
+                    imgElement.alt = article.title;
+                    imgElement.classList.add('article-image');
+                    articleImages.appendChild(imgElement);
+                }
+
+                const additionalContent = document.getElementById('additional-content');
+
+                if (article.content2 || article.image2) {
+                    if (article.content2) {
+                        const content2Element = document.createElement('p');
+                        content2Element.textContent = article.content2;
+                        additionalContent.appendChild(content2Element);
+                    }
+                    if (article.image2) {
+                        const img2Element = document.createElement('img');
+                        img2Element.src = article.image2;
+                        img2Element.alt = `${article.title} - Imagen 2`;
+                        img2Element.classList.add('article-image');
+                        additionalContent.appendChild(img2Element);
+                    }
+                }
+
+                if (article.content3 || article.image3) {
+                    if (article.content3) {
+                        const content3Element = document.createElement('p');
+                        content3Element.textContent = article.content3;
+                        additionalContent.appendChild(content3Element);
+                    }
+                    if (article.image3) {
+                        const img3Element = document.createElement('img');
+                        img3Element.src = article.image3;
+                        img3Element.alt = `${article.title} - Imagen 3`;
+                        img3Element.classList.add('article-image');
+                        additionalContent.appendChild(img3Element);
+                    }
+                }
+
+                if (article.video) {
+                    const videoElement = document.createElement('video');
+                    videoElement.src = article.video;
+                    videoElement.controls = true;
+                    videoElement.classList.add('article-video');
+                    document.getElementById('article-video').appendChild(videoElement);
+                }
+            } else {
+                document.getElementById('main-content').innerHTML = '<p>Artículo no encontrado</p>';
+            }
+        }
+
+        async function loadAdditionalContent() {
+            const response = await fetch('app.php?action=getAdditionalContent');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('additionalContentText').textContent = data.content;
+                if (data.image) {
+                    const imgElement = document.getElementById('additionalContentImage');
+                    imgElement.src = data.image;
+                    imgElement.style.display = 'block';
+                }
+                document.getElementById('socialMediaContent1').textContent = data.socialMediaContent1;
+                document.getElementById('socialMediaContent2').textContent = data.socialMediaContent2;
+                if (data.socialMediaImage1) {
+                    const imgElement1 = document.getElementById('socialMediaImage1');
+                    imgElement1.src = data.socialMediaImage1;
+                    imgElement1.style.display = 'block';
+                }
+                if (data.socialMediaImage2) {
+                    const imgElement2 = document.getElementById('socialMediaImage2');
+                    imgElement2.src = data.socialMediaImage2;
+                    imgElement2.style.display = 'block';
+                }
+            }
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric'
+            });
+            document.getElementById('date-time').textContent = dateTimeString;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArticle();
+            loadAdditionalContent();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+
+            mobileMenu.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

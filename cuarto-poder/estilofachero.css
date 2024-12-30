@@ -1,0 +1,363 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-header {
+    background-color: #004400; /* Fondo gris oscuro */
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bottom-header {
+    background-color: #004400; /* Fondo verde */
+    color: white;
+    padding: 10px 0;
+}
+
+header h1 {
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+header .date-time {
+    font-size: 1em;
+    margin-right: 20px;
+}
+
+header .logo-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+header .logo {
+    display: none; /* Oculta la imagen pequeña */
+    max-height: 80px;
+    margin-right: 40px;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+nav .nav-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+nav .nav-links li {
+    margin: 5px;
+}
+
+nav .nav-links li a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #006600;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+nav .nav-links li a:hover {
+    background-color: #008800;
+}
+
+.nav-links-right {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+}
+
+.nav-links-right li {
+    margin: 0 5px;
+}
+
+.nav-links-right li a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #006600;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.nav-links-right li a:hover {
+    background-color: #008800;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-toggle .bar {
+    height: 3px;
+    width: 25px;
+    background-color: white;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+    min-height: calc(100vh - 120px);
+}
+
+article {
+    background-color: #1a1a1a;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Agrega sombra a los artículos */
+    transition: transform 0.3s ease; /* Añade una transición suave */
+}
+
+article:hover {
+    transform: translateY(-10px); /* Eleva el artículo al pasar el cursor */
+}
+
+article h3 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.ver-mas {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #006600;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    max-width: 50%;
+}
+
+.ver-mas:hover {
+    background-color: #008800;
+}
+
+.additional-content {
+    background-color: #1a1a1a;
+    border-left: 1px solid #004400;
+    padding: 20px;
+    color: white;
+    width: 20%;
+    position: sticky;
+    top: 0;
+}
+
+footer {
+    background-color: #004400;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer .copyright {
+    font-size: 12px;
+    color: #cccccc;
+}
+
+button {
+    background-color: #006600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #008800;
+}
+
+.article-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    max-width: 300px;
+    max-height: 200px;
+    display: block;
+    margin: 0 auto 10px; /* Añade un margen inferior */
+    border-radius: 5px; /* Añade bordes redondeados a las imágenes */
+}
+
+.article-video {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Login Form */
+#loginForm {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+#loginForm h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+#loginForm input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #333333;
+    color: #ffffff;
+}
+
+#loginForm button {
+    width: 100%;
+}
+
+/* Modify Form */
+#modifyForm {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+#modifyForm h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+#modifyForm input,
+#modifyForm textarea,
+#modifyForm select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #333333;
+    color: #ffffff;
+}
+
+#modifyForm button {
+    width: 100%;
+}
+
+#articlesList {
+    max-width: 600px;
+    margin: 50px auto;
+    color: #ffffff;
+}
+
+#articlesList h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+#articlesList ul {
+    list-style: none;
+    padding: 0;
+}
+
+#articlesList ul li {
+    background-color: #1a1a1a;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Agrega sombra a los artículos */
+    transition: transform 0.3s ease; /* Añade una transición suave */
+}
+
+#articlesList ul li:hover {
+    transform: translateY(-10px); /* Eleva el artículo al pasar el cursor */
+}
+
+#articlesList ul li button {
+    margin-left: 10px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    nav .nav-links {
+        flex-direction: column;
+        display: none;
+        width: 100%;
+        background-color: #004400; /* Fondo verde para el menú desplegable */
+    }
+
+    nav .nav-links.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .additional-content {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #004400;
+    }
+
+    .ver-mas {
+        max-width: 100%;
+    }
+}

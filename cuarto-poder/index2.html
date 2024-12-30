@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUARTO PODER - Noticias Antiguas</title>
+    <link rel="stylesheet" href="estilofachero.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <h1>CUARTO PODER NOTICIAS</h1>
+            <div class="date-time" id="date-time"></div>
+            <nav class="nav-links-right">
+                <ul>
+                    <li><a href="/admin.html">ADMIN</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="bottom-header">
+            <nav>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/index2.html?section=Cienaga">Ciénaga</a></li>
+                    <li><a href="/index2.html?section=SantaMartaYMagdalena">Santa Marta Y Magdalena</a></li>
+                    <li><a href="/index2.html?section=Mundo">Mundo</a></li>
+                    <li><a href="/index2.html?section=Opinion">Opinión</a></li>
+                    <li><a href="/index2.html?section=Educacion">Educación</a></li>
+                    <li><a href="/index2.html?section=Sociedad">Sociedad</a></li>
+                    <li><a href="/index2.html?section=Deporte">Deporte</a></li>
+                </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="content-wrapper">
+        <main>
+            <section id="noticias-antiguas">
+                <h2>Noticias Antiguas</h2>
+                <div>
+                    <label for="start-date">Fecha Inicio:</label>
+                    <input type="date" id="start-date">
+                    <label for="end-date">Fecha Fin:</label>
+                    <input type="date" id="end-date">
+                    <button id="filter-button">Filtrar</button>
+                    <button id="clear-filter-button">Quitar Filtro</button>
+                </div>
+                <div class="day-group" id="day-group"></div>
+            </section>
+        </main>
+        <aside class="additional-content" id="additionalContent">
+            <h2>Contenido Adicional</h2>
+            <p id="additionalContentText"></p>
+            <img id="additionalContentImage" class="article-image" style="display: none;">
+            <h2>Redes Sociales</h2>
+            <p id="socialMediaContent1"></p>
+            <img id="socialMediaImage1" class="article-image" style="display: none;">
+            <p id="socialMediaContent2"></p>
+            <img id="socialMediaImage2" class="article-image" style="display: none;">
+        </aside>
+    </div>
+    <footer>
+        <p>&copy; 2024 CUARTO PODER</p>
+        <p class="copyright">© Todos los derechos reservados a Cuarto Poder Noticias</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const section = urlParams.get('section') || 'Cienaga';
+
+            const loadArticles = (startDate, endDate) => {
+                fetch(`articles.php?section=${section}`)
+                    .then(response => response.json())
+                    .then(articles => {
+                        const dayGroupContainer = document.getElementById('day-group');
+                        dayGroupContainer.innerHTML = '';
+                        const days = {};
+
+                        articles.forEach(article => {
+                            const date = article.date;
+                            const day = date;
+                            if (!days[day]) {
+                                days[day] = [];
+                            }
+                            days[day].push(article);
+                        });
+
+                        const sortedDays = Object.keys(days).sort((a, b) => new Date(b) - new Date(a));
+
+                        sortedDays.forEach(day => {
+                            if (
+                                (!startDate || new Date(day) >= new Date(startDate)) &&
+                                (!endDate || new Date(day) <= new Date(endDate))
+                            ) {
+                                const dayGroup = document.createElement('div');
+                                dayGroup.classList.add('day-group');
+                                dayGroup.innerHTML = `<h3>${day}</h3>`;
+
+                                days[day].forEach(article => {
+                                    const date = article.date;
+
+                                    const articleElement = document.createElement('article');
+                                    articleElement.innerHTML = `
+                                        <img src="${article.image}" alt="${article.title}" class="article-image">
+                                        <h3>${article.title}</h3>
+                                        <p>${article.content.substring(0, 100)}...</p>
+                                        <p class="date">${date}</p>
+                                        <a href="/articulo.html?section=${section}&title=${encodeURIComponent(article.title)}">Leer más</a>
+                                    `;
+                                    dayGroup.appendChild(articleElement);
+                                });
+
+                                dayGroupContainer.appendChild(dayGroup);
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar los artículos:', error));
+            };
+
+            loadArticles();
+
+            document.getElementById('filter-button').addEventListener('click', () => {
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                loadArticles(startDate, endDate);
+            });
+
+            document.getElementById('clear-filter-button').addEventListener('click', () => {
+                document.getElementById('start-date').value = '';
+                document.getElementById('end-date').value = '';
+                loadArticles();
+            });
+
+            async function loadAdditionalContent() {
+                const response = await fetch('additionalContent.php');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('additionalContentText').textContent = data.content;
+                    if (data.image) {
+                        const imgElement = document.getElementById('additionalContentImage');
+                        imgElement.src = data.image;
+                        imgElement.style.display = 'block';
+                    }
+                    document.getElementById('socialMediaContent1').textContent = data.socialMediaContent1;
+                    document.getElementById('socialMediaContent2').textContent = data.socialMediaContent2;
+                    if (data.socialMediaImage1) {
+                        const imgElement1 = document.getElementById('socialMediaImage1');
+                        imgElement1.src = data.socialMediaImage1;
+                        imgElement1.style.display = 'block';
+                    }
+                    if (data.socialMediaImage2) {
+                        const imgElement2 = document.getElementById('socialMediaImage2');
+                        imgElement2.src = data.socialMediaImage2;
+                        imgElement2.style.display = 'block';
+                    }
+                }
+            }
+
+            loadAdditionalContent();
+
+            function updateDateTime() {
+                const now = new Date();
+                const dateTimeString = now.toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric'
+                });
+                document.getElementById('date-time').textContent = dateTimeString;
+            }
+
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+
+            mobileMenu.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

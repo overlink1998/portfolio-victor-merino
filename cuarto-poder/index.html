@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUARTO PODER</title>
+    <link rel="stylesheet" href="estilofachero.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <h1>CUARTO PODER NOTICIAS</h1>
+            <div class="date-time" id="date-time"></div>
+            <nav class="nav-links-right">
+                <ul>
+                    <li><a href="/admin.html">ADMIN</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="bottom-header">
+            <nav>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/index2.html?section=Cienaga">Ciénaga</a></li>
+                    <li><a href="/index2.html?section=SantaMartaYMagdalena">Santa Marta Y Magdalena</a></li>
+                    <li><a href="/index2.html?section=Mundo">Mundo</a></li>
+                    <li><a href="/index2.html?section=Opinion">Opinión</a></li>
+                    <li><a href="/index2.html?section=Educacion">Educación</a></li>
+                    <li><a href="/index2.html?section=Sociedad">Sociedad</a></li>
+                    <li><a href="/index2.html?section=Deporte">Deporte</a></li>
+                </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="content-wrapper">
+        <main>
+            <section id="Cienaga">
+                <h2>Ciénaga</h2>
+                <div class="articles" id="articles-Cienaga"></div>
+                <a href="/index2.html?section=Cienaga" class="ver-mas">Ver más</a>
+            </section>
+            <section id="SantaMartaYMagdalena">
+                <h2>Santa Marta Y Magdalena</h2>
+                <div class="articles" id="articles-SantaMartaYMagdalena"></div>
+                <a href="/index2.html?section=SantaMartaYMagdalena" class="ver-mas">Ver más</a>
+            </section>
+            <section id="Mundo">
+                <h2>Mundo</h2>
+                <div class="articles" id="articles-Mundo"></div>
+                <a href="/index2.html?section=Mundo" class="ver-mas">Ver más</a>
+            </section>
+            <section id="Opinion">
+                <h2>Opinión</h2>
+                <div class="articles" id="articles-Opinion"></div>
+                <a href="/index2.html?section=Opinion" class="ver-mas">Ver más</a>
+            </section>
+            <section id="Educacion">
+                <h2>Educación</h2>
+                <div class="articles" id="articles-Educacion"></div>
+                <a href="/index2.html?section=Educacion" class="ver-mas">Ver más</a>
+            </section>
+            <section id="Sociedad">
+                <h2>Sociedad</h2>
+                <div class="articles" id="articles-Sociedad"></div>
+                <a href="/index2.html?section=Sociedad" class="ver-mas">Ver más</a>
+            </section>
+            <section id="Deporte">
+                <h2>Deporte</h2>
+                <div class="articles" id="articles-Deporte"></div>
+                <a href="/index2.html?section=Deporte" class="ver-mas">Ver más</a>
+            </section>
+        </main>
+        <aside class="additional-content" id="additionalContent">
+            <h2>Contenido Adicional</h2>
+            <p id="additionalContentText"></p>
+            <img id="additionalContentImage" class="article-image" style="display: none;">
+            <h2>Redes Sociales</h2>
+            <p id="socialMediaContent1"></p>
+            <img id="socialMediaImage1" class="article-image" style="display: none;">
+            <p id="socialMediaContent2"></p>
+            <img id="socialMediaImage2" class="article-image" style="display: none;">
+        </aside>
+    </div>
+    <footer>
+        <p>&copy; 2024 CUARTO PODER</p>
+        <p class="copyright">© Todos los derechos reservados a Cuarto Poder Noticias</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = [
+                'Cienaga',
+                'SantaMartaYMagdalena',
+                'Mundo',
+                'Opinion',
+                'Educacion',
+                'Sociedad',
+                'Deporte'
+            ];
+
+            sections.forEach(section => {
+                fetch(`app.php?action=getArticles&section=${section}`)
+                    .then(response => response.json())
+                    .then(articles => {
+                        articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        const articlesContainer = document.getElementById(`articles-${section}`);
+                        articlesContainer.innerHTML = articles.slice(0, 2).map(article => {
+                            const date = article.date;
+                            return `
+                                <article>
+                                    <img src="${article.image}" alt="${article.title}" class="article-image">
+                                    <h3>${article.title}</h3>
+                                    <p>${article.content.substring(0, 100)}...</p>
+                                    <p>${date}</p>
+                                    <a href="/articulo.html?section=${section}&title=${encodeURIComponent(article.title)}">Leer más</a>
+                                </article>
+                            `;
+                        }).join('');
+                    })
+                    .catch(error => console.error('Error al cargar los artículos:', error));
+            });
+
+            async function loadAdditionalContent() {
+                const response = await fetch('app.php?action=getAdditionalContent');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('additionalContentText').textContent = data.content;
+                    if (data.image) {
+                        const imgElement = document.getElementById('additionalContentImage');
+                        imgElement.src = data.image;
+                        imgElement.style.display = 'block';
+                    }
+                    document.getElementById('socialMediaContent1').textContent = data.socialMediaContent1;
+                    document.getElementById('socialMediaContent2').textContent = data.socialMediaContent2;
+                    if (data.socialMediaImage1) {
+                        const imgElement1 = document.getElementById('socialMediaImage1');
+                        imgElement1.src = data.socialMediaImage1;
+                        imgElement1.style.display = 'block';
+                    }
+                    if (data.socialMediaImage2) {
+                        const imgElement2 = document.getElementById('socialMediaImage2');
+                        imgElement2.src = data.socialMediaImage2;
+                        imgElement2.style.display = 'block';
+                    }
+                }
+            }
+
+            loadAdditionalContent();
+
+            function updateDateTime() {
+                const now = new Date();
+                const dateTimeString = now.toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric'
+                });
+                document.getElementById('date-time').textContent = dateTimeString;
+            }
+
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+
+            mobileMenu.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

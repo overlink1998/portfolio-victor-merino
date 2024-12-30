@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUARTO PODER - Administración</title>
+    <link rel="stylesheet" href="estilofachero.css">
+</head>
+<body>
+    <header>
+        <div class="top-header">
+            <h1>CUARTO PODER NOTICIAS</h1>
+            <div class="date-time" id="date-time"></div>
+        </div>
+        <div class="bottom-header">
+            <nav>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/index2.html?section=Cienaga">Ciénaga</a></li>
+                    <li><a href="/index2.html?section=SantaMartaYMagdalena">Santa Marta Y Magdalena</a></li>
+                    <li><a href="/index2.html?section=Mundo">Mundo</a></li>
+                    <li><a href="/index2.html?section=Opinion">Opinión</a></li>
+                    <li><a href="/index2.html?section=Educacion">Educación</a></li>
+                    <li><a href="/index2.html?section=Sociedad">Sociedad</a></li>
+                    <li><a href="/index2.html?section=Deporte">Deporte</a></li>
+                </ul>
+                <div class="menu-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="content-wrapper">
+        <main>
+            <form id="loginForm">
+                <h2>Iniciar Sesión</h2>
+                <input type="text" id="username" placeholder="Usuario" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit">Ingresar</button>
+            </form>
+
+            <form id="modifyForm" style="display:none;" enctype="multipart/form-data">
+                <h2>Modificar Contenido</h2>
+                <input type="hidden" id="oldTitle" name="oldTitle">
+                <label for="title">Título:</label>
+                <input type="text" id="title" name="title" required>
+                <label for="section">Sección:</label>
+                <select id="section" name="section" required>
+                    <option value="Cienaga">Ciénaga</option>
+                    <option value="SantaMartaYMagdalena">Santa Marta Y Magdalena</option>
+                    <option value="Mundo">Mundo</option>
+                    <option value="Opinion">Opinión</option>
+                    <option value="Educacion">Educación</option>
+                    <option value="Sociedad">Sociedad</option>
+                    <option value="Deporte">Deporte</option>
+                </select>
+                <label for="date">Fecha:</label>
+                <input type="date" id="date" name="date">
+                <label for="content">Contenido:</label>
+                <textarea id="content" name="content" required></textarea>
+                <label for="image">Imagen:</label>
+                <input type="file" id="image" name="image">
+                <label for="content2">Contenido 2:</label>
+                <textarea id="content2" name="content2"></textarea>
+                <label for="image2">Imagen 2:</label>
+                <input type="file" id="image2" name="image2">
+                <label for="content3">Contenido 3:</label>
+                <textarea id="content3" name="content3"></textarea>
+                <label for="image3">Imagen 3:</label>
+                <input type="file" id="image3" name="image3">
+                <label for="video">Video:</label>
+                <input type="file" id="video" name="video">
+                <button type="submit">Guardar</button>
+            </form>
+
+            <form id="additionalContentForm" style="display:none;" enctype="multipart/form-data">
+                <h2>Contenido Adicional</h2>
+                <label for="additionalContent">Contenido adicional:</label>
+                <textarea id="additionalContent" name="content" placeholder="Contenido adicional"></textarea>
+                <label for="socialMediaContent1">Contenido de redes sociales 1:</label>
+                <textarea id="socialMediaContent1" name="socialMediaContent1" placeholder="Contenido de redes sociales 1"></textarea>
+                <label for="socialMediaImage1">Imagen de redes sociales 1:</label>
+                <input type="file" id="socialMediaImage1" name="socialMediaImage1">
+                <label for="socialMediaContent2">Contenido de redes sociales 2:</label>
+                <textarea id="socialMediaContent2" name="socialMediaContent2" placeholder="Contenido de redes sociales 2"></textarea>
+                <label for="socialMediaImage2">Imagen de redes sociales 2:</label>
+                <input type="file" id="socialMediaImage2" name="socialMediaImage2">
+                <button type="submit">Guardar</button>
+            </form>
+
+            <div id="articlesList" style="display:none;">
+                <h2>Lista de Artículos</h2>
+                <ul></ul>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <p>&copy; 2024 CUARTO PODER</p>
+        <p class="copyright">© Todos los derechos reservados a Cuarto Poder Noticias</p>
+    </footer>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const modifyForm = document.getElementById('modifyForm');
+        const additionalContentForm = document.getElementById('additionalContentForm');
+        const articlesList = document.getElementById('articlesList');
+        const articlesListUl = articlesList.querySelector('ul');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('app.php?action=login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ username, password })
+            });
+
+            const data = await response.json();
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                loginForm.style.display = 'none';
+                modifyForm.style.display = 'block';
+                additionalContentForm.style.display = 'block';
+                articlesList.style.display = 'block';
+                loadArticles();
+                loadAdditionalContent();
+            } else {
+                alert('Credenciales inválidas');
+            }
+        });
+
+        modifyForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const token = localStorage.getItem('token');
+            const formData = new FormData(modifyForm);
+
+            const response = await fetch('app.php?action=modify', {
+                method: 'POST',
+                headers: { 'Authorization': token },
+                body: formData
+            });
+
+            const data = await response.json();
+            alert(data.message);
+            loadArticles();
+        });
+
+        additionalContentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const token = localStorage.getItem('token');
+            const formData = new FormData(additionalContentForm);
+
+            const response = await fetch('app.php?action=modifyAdditionalContent', {
+                method: 'POST',
+                headers: { 'Authorization': token },
+                body: formData
+            });
+
+            const data = await response.json();
+            alert(data.message);
+            loadAdditionalContent();
+        });
+
+        async function loadArticles() {
+            const response = await fetch('app.php?action=getArticles&section=all');
+            const articles = await response.json();
+
+            articlesListUl.innerHTML = '';
+            articles.forEach(article => {
+                const li = document.createElement('li');
+                li.innerHTML = 
+                    `<span>${article.title}</span>
+                    <button onclick="editArticle('${article.title}', '${article.section}')">Editar</button>
+                    <button onclick="deleteArticle('${article.title}', '${article.section}')">Eliminar</button>`;
+                articlesListUl.appendChild(li);
+            });
+        }
+
+        async function loadAdditionalContent() {
+            const response = await fetch('app.php?action=getAdditionalContent');
+            const data = await response.json();
+
+            document.getElementById('additionalContent').value = data.content;
+            document.getElementById('socialMediaContent1').value = data.socialMediaContent1;
+            document.getElementById('socialMediaContent2').value = data.socialMediaContent2;
+        }
+
+        function editArticle(title, section) {
+            const token = localStorage.getItem('token');
+
+            fetch(`app.php?action=getArticles&section=${section}`)
+                .then(response => response.json())
+                .then(articles => {
+                    const article = articles.find(article => article.title === title);
+
+                    if (article) {
+                        document.getElementById('title').value = article.title;
+                        document.getElementById('oldTitle').value = article.title;
+                        document.getElementById('section').value = section;
+                        document.getElementById('content').value = article.content;
+                        document.getElementById('content2').value = article.content2;
+                        document.getElementById('content3').value = article.content3;
+                        document.getElementById('date').value = article.date;
+
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+        }
+
+        function deleteArticle(title, section) {
+            const token = localStorage.getItem('token');
+
+            fetch('app.php?action=delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': token
+                },
+                body: new URLSearchParams({ title, section })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    loadArticles();
+                });
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric'
+            });
+            document.getElementById('date-time').textContent = dateTimeString;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+
+            mobileMenu.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
